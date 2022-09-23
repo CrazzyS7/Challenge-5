@@ -4,49 +4,45 @@ using UnityEngine;
 
 public class TargetX : MonoBehaviour
 {
-    private Rigidbody rb;
-    private GameManagerX gameManagerX;
-    public int pointValue;
-    public GameObject explosionFx;
-
-    public float timeOnScreen = 1.0f;
-
-    private float minValueX = -3.75f; // the x value of the center of the left-most square
-    private float minValueY = -3.75f; // the y value of the center of the bottom-most square
-    private float spaceBetweenSquares = 2.5f; // the distance between the centers of squares on the game board
+    private float mSpaceBetweenSquares = 2.5f;   // the distance between the centers of squares on the game board
+    private GameManagerX mGameManagerX;
+    private float mMinValueX = -3.75f;           // the x value of the center of the left-most square
+    private float mMinValueY = -3.75f;           // the y value of the center of the bottom-most square
+    private Rigidbody mTargetRB;
     
+    public ParticleSystem mExplosionPtcl;
+    public float mTimeOnScreen = 1.5f;
+    public int mPointValue;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        gameManagerX = GameObject.Find("Game Manager").GetComponent<GameManagerX>();
+        this.mTargetRB = GetComponent<Rigidbody>();
+        this.mGameManagerX = GameObject.Find("GameManager").GetComponent<GameManagerX>();
 
         transform.position = RandomSpawnPosition(); 
-        StartCoroutine(RemoveObjectRoutine()); // begin timer before target leaves screen
-
+        StartCoroutine(RemoveObjectRoutine());  // begin timer before target leaves screen
+        return;
     }
 
     // When target is clicked, destroy it, update score, and generate explosion
-    private void OnMouseEnter()
+    private void OnMouseDown()
     {
-        if (gameManagerX.isGameActive)
+        if (!mGameManagerX.isGameOver())
         {
             Destroy(gameObject);
-            gameManagerX.UpdateScore(pointValue);
-            Explode();
+            mGameManagerX.UpdateScore(mPointValue);
+            Explosion();
         }
-               
+        return;       
     }
 
     // Generate a random spawn position based on a random index from 0 to 3
-    Vector3 RandomSpawnPosition()
+    private Vector3 RandomSpawnPosition()
     {
-        float spawnPosX = minValueX + (RandomSquareIndex() * spaceBetweenSquares);
-        float spawnPosY = minValueY + (RandomSquareIndex() * spaceBetweenSquares);
-
+        float spawnPosX = mMinValueX + (RandomSquareIndex() * mSpaceBetweenSquares);
+        float spawnPosY = mMinValueY + (RandomSquareIndex() * mSpaceBetweenSquares);
         Vector3 spawnPosition = new Vector3(spawnPosX, spawnPosY, 0);
         return spawnPosition;
-
     }
 
     // Generates random square index from 0 to 3, which determines which square the target will appear in
@@ -59,30 +55,29 @@ public class TargetX : MonoBehaviour
     // If target that is NOT the bad object collides with sensor, trigger game over
     private void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
-
         if (other.gameObject.CompareTag("Sensor") && !gameObject.CompareTag("Bad"))
         {
-            gameManagerX.GameOver();
-        } 
-
+            mGameManagerX.GameOver();
+        }
+        //Destroy(gameObject);
+        return;
     }
 
     // Display explosion particle at object's position
-    void Explode ()
+    private void Explosion()
     {
-        Instantiate(explosionFx, transform.position, explosionFx.transform.rotation);
+        Instantiate(mExplosionPtcl, transform.position, mExplosionPtcl.transform.rotation);
+        return;
     }
 
     // After a delay, Moves the object behind background so it collides with the Sensor object
     IEnumerator RemoveObjectRoutine ()
     {
-        yield return new WaitForSeconds(timeOnScreen);
-        if (gameManagerX.isGameActive)
+        if (mGameManagerX.isGameOver())
         {
-            transform.Translate(Vector3.forward * 5, Space.World);
+            float speed = 5.0f;
+            yield return new WaitForSeconds(mTimeOnScreen);
+            transform.Translate(Vector3.forward * speed, Space.World);
         }
-
     }
-
 }
