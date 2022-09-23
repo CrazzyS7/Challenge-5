@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class TargetX : MonoBehaviour
@@ -59,7 +59,7 @@ public class TargetX : MonoBehaviour
         {
             mGameManagerX.GameOver();
         }
-        //Destroy(gameObject);
+        Destroy(gameObject);
         return;
     }
 
@@ -73,7 +73,7 @@ public class TargetX : MonoBehaviour
     // After a delay, Moves the object behind background so it collides with the Sensor object
     IEnumerator RemoveObjectRoutine ()
     {
-        if (mGameManagerX.isGameOver())
+        if (!mGameManagerX.isGameOver())
         {
             float speed = 5.0f;
             yield return new WaitForSeconds(mTimeOnScreen);
