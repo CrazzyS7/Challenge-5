@@ -8,6 +8,7 @@ public class TargetX : MonoBehaviour
     private GameManagerX mGameManagerX;
     private float mMinValueX = -3.75f;           // the x value of the center of the left-most square
     private float mMinValueY = -3.75f;           // the y value of the center of the bottom-most square
+    private int mTargetRange = 4;
     private Rigidbody mTargetRB;
     
     public ParticleSystem mExplosionPtcl;
@@ -46,10 +47,9 @@ public class TargetX : MonoBehaviour
     }
 
     // Generates random square index from 0 to 3, which determines which square the target will appear in
-    int RandomSquareIndex ()
+    private int RandomSquareIndex ()
     {
-        int targetRange = 4;
-        return Random.Range(0, targetRange);
+        return Random.Range(0, mTargetRange);
     }
 
 

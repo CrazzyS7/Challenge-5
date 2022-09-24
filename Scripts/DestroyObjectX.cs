@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class DestroyObjectX : MonoBehaviour
 {
+    private int mTimeSec = 2;
+
     void Start()
     {
-        Destroy(gameObject, 2); // destroy particle after 2 seconds
+        Destroy(gameObject, mTimeSec); // destroy particle after 2 seconds
     }
-
-
 }

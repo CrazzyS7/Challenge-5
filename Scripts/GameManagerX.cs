@@ -20,6 +20,7 @@ public class GameManagerX : MonoBehaviour
     private float mSpawnRate = 2.0f;
     private bool mIsGameOver = false;
     private float mTimer = 60.0f;
+    private int mTargetRange = 4;
     private int mOneSec = 1;
     private int mScore = 0;
     
@@ -48,7 +49,7 @@ public class GameManagerX : MonoBehaviour
     // Generates random square index from 0 to 3, which determines which square the target will appear in
     private int RandomSquareIndex()
     {
-        return Random.Range(0, 4);
+        return Random.Range(0, mTargetRange);
     }
 
     // Update score with value from target clicked
@@ -63,7 +64,6 @@ public class GameManagerX : MonoBehaviour
     {
         this.mTimer--;
         mTimerText.text = "Timer: " + mTimer;
-        Debug.Log("Now: " + mTimer);
     }
 
     public bool isGameOver()
