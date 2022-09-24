@@ -10,6 +10,7 @@ public class GameManagerX : MonoBehaviour
     public List<GameObject> mTargetPrefabs;
     public TextMeshProUGUI mGameOverText;
     public TextMeshProUGUI mScoreText;
+    public TextMeshProUGUI mTimerText;
     public GameObject mTitleScreen;
     public Button mRestartButton; 
 
@@ -18,28 +19,21 @@ public class GameManagerX : MonoBehaviour
     private float mMinValueY = -3.75f;           //  y value of the center of the bottom-most square
     private float mSpawnRate = 2.0f;
     private bool mIsGameOver = false;
+    private float mTimer = 60.0f;
+    private int mOneSec = 1;
     private int mScore = 0;
     
     // Start the game, remove title screen, reset score, and adjust spawnRate based on difficulty button clicked
     public void StartGame(int _difficulty)
     {
         this.mSpawnRate /= _difficulty;
+        mTimer = 60;
         this.mScore = 0;
         UpdateScore(mScore);
         this.mIsGameOver = false;
         mTitleScreen.SetActive(false);
+        StartCoroutine(LoseTime());
         StartCoroutine(SpawnTarget());
-    }
-
-    // While game is active spawn a random target
-    IEnumerator SpawnTarget()
-    {
-        while (!mIsGameOver)
-        {
-            yield return new WaitForSeconds(mSpawnRate);
-            int index = Random.Range(0, mTargetPrefabs.Count);
-            Instantiate(mTargetPrefabs[index], RandomSpawnPosition(), mTargetPrefabs[index].transform.rotation);
-        }
     }
 
     // Generate a random spawn position based on a random index from 0 to 3
@@ -65,6 +59,13 @@ public class GameManagerX : MonoBehaviour
         return;
     }
 
+    private void UpdateTimer()
+    {
+        this.mTimer--;
+        mTimerText.text = "Timer: " + mTimer;
+        Debug.Log("Now: " + mTimer);
+    }
+
     public bool isGameOver()
     {
         return this.mIsGameOver;
@@ -84,5 +85,26 @@ public class GameManagerX : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         return;
+    }
+
+    // While game is active spawn a random target
+    IEnumerator SpawnTarget()
+    {
+        while (!mIsGameOver)
+        {
+            //yield return new WaitForSeconds(mOneSec);
+            yield return new WaitForSeconds(mSpawnRate);
+            int index = Random.Range(0, mTargetPrefabs.Count);
+            Instantiate(mTargetPrefabs[index], RandomSpawnPosition(), mTargetPrefabs[index].transform.rotation);
+        }
+    }
+
+    IEnumerator LoseTime()
+    {
+        while (!mIsGameOver)
+        {
+            yield return new WaitForSeconds(mOneSec);
+            UpdateTimer();
+        }
     }
 }

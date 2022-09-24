@@ -11,7 +11,7 @@ public class TargetX : MonoBehaviour
     private Rigidbody mTargetRB;
     
     public ParticleSystem mExplosionPtcl;
-    public float mTimeOnScreen = 1.5f;
+    public float mTimeOnScreen = 2f;
     public int mPointValue;
 
     void Start()
@@ -48,7 +48,8 @@ public class TargetX : MonoBehaviour
     // Generates random square index from 0 to 3, which determines which square the target will appear in
     int RandomSquareIndex ()
     {
-        return Random.Range(0, 4);
+        int targetRange = 4;
+        return Random.Range(0, targetRange);
     }
 
 
