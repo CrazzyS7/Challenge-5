@@ -19,8 +19,8 @@ public class GameManagerX : MonoBehaviour
     private float mMinValueY = -3.75f;           //  y value of the center of the bottom-most square
     private float mSpawnRate = 2.0f;
     private bool mIsGameOver = false;
-    private float mTimer = 60.0f;
     private int mTargetRange = 4;
+    private int mTimer = 59;
     private int mOneSec = 1;
     private int mScore = 0;
     
@@ -64,6 +64,12 @@ public class GameManagerX : MonoBehaviour
     {
         this.mTimer--;
         mTimerText.text = "Timer: " + mTimer;
+
+        if( mTimer <= 0)
+        {
+            GameOver();
+        }
+        return;
     }
 
     public bool isGameOver()
